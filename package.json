@@ -1,0 +1,24 @@
+{
+  "name": "framework",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cubo-cms/node-framework.git"
+  },
+  "author": "Papiando <info@papiando.com> (https://papiando.com/me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cubo-cms/node-framework/issues"
+  },
+  "homepage": "https://github.com/cubo-cms/node-framework#readme"
+}
