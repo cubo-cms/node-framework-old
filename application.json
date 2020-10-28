@@ -1,0 +1,15 @@
+{
+  "name": "cubo-cms",
+  "title": "Cubo CMS",
+  "description": "This is my first App",
+  "dataSource": "./example/datasource.json",
+  "route": "./example/route.json",
+  "server": "#/.config/server.json",
+  "style": {
+    "document": "./view/style/document.html",
+    "list": "./view/style/list.html"
+  },
+  "logging": {
+    "logLevel": "debug,error,success,warning"
+  }
+}
