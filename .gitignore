@@ -1,5 +1,6 @@
 # Custom
 test/
+.cert/
 .config/
 
 # Logs
