@@ -1,10 +1,4 @@
+import Application from './lib/Application.mjs';
+import Core from './lib/Core.mjs';
 
-namespace Cubo {
-  class Core {
-    constructor() {
-      console.log('hello');
-    }
-  }
-}
-
-new Cubo.Core();
+export default { Application, Core };
