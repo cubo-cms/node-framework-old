@@ -9,7 +9,10 @@
     "document": "./view/style/document.html",
     "list": "./view/style/list.html"
   },
-  "logging": {
-    "logLevel": "debug,error,success,warning"
+  "log": {
+    "colorize": true,
+    "useLocale": true,
+    "suppressType": [],
+    "suppressSource": []
   }
 }
