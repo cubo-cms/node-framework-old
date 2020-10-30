@@ -145,7 +145,7 @@ class Namespace {
     return new Promise((resolve, reject) => {
       this.registerPath(this.resolvePath(searchPath))
         .then((namespace) => {
-          Log.info({ message: `Namespace completed registering modules`, source: this.name, payload: this.#data });
+          Log.success({ message: `Namespace completed registering modules`, source: this.name, payload: this.#data });
           resolve(this);
         }).catch((error) => {
           Log.error({ message: error, source: this.name });
@@ -181,7 +181,7 @@ class Namespace {
           if(fs.statSync(path.join(searchPath, file)).isDirectory()) {
             promises.push(this.registerPath(path.join(searchPath, file), file));
           } else if(this.default.includeExtensions.includes(path.extname(file))) {
-            this.registerModule({name: path.basename(file, path.extname(file)), path: path.join(searchPath, file), dependency: dependency});
+            this.registerModule({name: path.basename(file, path.extname(file)), path: 'file://' + path.join(searchPath, file), dependency: dependency});
           }
         });
         Promise.allSettled(promises)
