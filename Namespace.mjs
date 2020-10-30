@@ -13,9 +13,9 @@ import { fileURLToPath } from 'url';
 import Log from './lib/Helper/Log.mjs';
 
 class Namespace {
-  /** @static @private @property {object} default - holds default settings for class
+  /** @static @property {object} default - holds default settings for class
     **/
-  static #default = {
+  static default = {
     useGlobal: false,       // option to publish namespace objects globally
     includeExtensions: ['.mjs', '.js'],
     searchPath: '#/lib'    // search path to locate modules
@@ -107,7 +107,7 @@ class Namespace {
                 import(registry.path)
                   .then((module) => {
                     this[moduleName] = module.default;
-                    if(this.#default.useGlobal)
+                    if(this.default.useGlobal)
                       global[moduleName] = this[moduleName];
                     this.#succeeded.push(moduleName);
                     resolve(moduleName);
@@ -120,7 +120,7 @@ class Namespace {
             import(registry.path)
               .then((module) => {
                 this[moduleName] = module.default;
-                if(this.#default.useGlobal)
+                if(this.default.useGlobal)
                   global[moduleName] = this[moduleName];
                 this.#succeeded.push(moduleName);
                 resolve(moduleName);
@@ -141,7 +141,7 @@ class Namespace {
     * @param {string} basePath - base path for module path; defaults to current directory
     * @return {object}
     **/
-  static register(searchPath = this.#default.searchPath, basePath = this.basePath) {
+  static register(searchPath = this.default.searchPath, basePath = this.basePath) {
     return new Promise((resolve, reject) => {
       this.registerPath(this.resolvePath(searchPath))
         .then((namespace) => {
@@ -180,7 +180,7 @@ class Namespace {
         } else files.forEach(file => {
           if(fs.statSync(path.join(searchPath, file)).isDirectory()) {
             promises.push(this.registerPath(path.join(searchPath, file), file));
-          } else if(this.#default.includeExtensions.includes(path.extname(file))) {
+          } else if(this.default.includeExtensions.includes(path.extname(file))) {
             this.registerModule({name: path.basename(file, path.extname(file)), path: path.join(searchPath, file), dependency: dependency});
           }
         });
