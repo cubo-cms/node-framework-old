@@ -8,91 +8,200 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-import Core from './lib/Core.mjs';
-import Log from './lib/Log.mjs';
+import Log from './lib/Helper/Log.mjs';
 
-export default class Namespace extends Core {
-  /** @static @property {object} default - holds default settings for class
+class Namespace {
+  /** @static @private @property {object} default - holds default settings for class
     **/
-  static default = {
+  static #default = {
     useGlobal: false,       // option to publish namespace objects globally
-    includeExtensions: ['.mjs', '.js']
-  };
-  /** @property {object} default - holds default settings for class
-    **/
-  default = {
+    includeExtensions: ['.mjs', '.js'],
     searchPath: '#/lib'    // search path to locate modules
   };
-
-  /** @constructor (data)
-    * Class constructor
-    * @param {string|object} data - instance data to store
+  /** @static @private @property {object} data - holds registry of modules
     **/
-  constructor(data = {}) {
-    super(data);
+  static #data = {};
+  /** @static @private @property {object} failed - modules failed to load
+    **/
+  static #failed = [];
+  /** @static @private @property {object} omitted - modules omitted to load
+    **/
+  static #omitted = [];
+  /** @static @private @property {object} succeeded - modules loaded
+    **/
+  static #succeeded = [];
+
+  /** @static @function basePath()
+    * Getter to retriebe path to web root (removing node_modules)
+    * @return {string}
+    **/
+  static get basePath() {
+    return this.path.substring(0, this.path.indexOf(path.sep + 'node_modules') == -1 ? this.path.length : this.path.indexOf(path.sep + 'node_modules'));
+  }
+  /** @static @function path()
+    * Getter to retrieve path to this module
+    * @return {string}
+    **/
+  static get path() {
+    return path.dirname(fileURLToPath(import.meta.url));
   }
 
-  /** @function register(searchPath,basePath)
+  /** @static @function isLoaded(moduleName)
+    * Returns true if module is loaded
+    * @param {string} moduleName - name of module
+    * @return {boolean}
+    **/
+  static isLoaded(moduleName) {
+    return this.#data[moduleName] && this.#data[moduleName].done;
+  }
+  /** @static @function isRegistered(moduleName)
+    * Returns true if module is registered
+    * @param {string} moduleName - name of module
+    * @return {boolean}
+    **/
+  static isRegistered(moduleName) {
+    return typeof this.#data[moduleName] !== 'undefined';
+  }
+  /** @static @function load(registry)
+    * Loads all registered modules
+    * @param {object} data - optionally provide alternative registry
+    * @return {object}
+    **/
+  static load(data = this.#data) {
+    return new Promise((resolve, reject) => {
+      let promises = [];
+      for(const moduleName of Object.keys(data)) {
+        if(!this.isLoaded(moduleName))
+          promises.push(this.loadModule(moduleName));
+      }
+      Promise.allSettled(promises)
+        .then(() => {
+          Log.info({ message: `Namespace completed loading modules`, class: this.name, payload: this.#succeeded });
+          if(Object.keys(this.#failed).length) {
+            Log.warning({ message: `Namespace failed loading some modules`, source: this.name, payload: this.#failed });
+          }
+          this.#data = {};
+          resolve(this);
+        });
+    });
+    return this;
+  }
+  /** @static @function loadModule(moduleName)
+    * Loads a module
+    * @param {string} moduleName - name of module
+    * @return {object}
+    **/
+  static loadModule(moduleName) {
+    return new Promise((resolve, reject) => {
+      let registry = this.#data[moduleName];
+      if(registry) {
+        if(registry.done) {
+          resolve(moduleName);
+        } else {
+          registry.done = true;
+          if(registry.dependency) {
+            this.loadModule(registry.dependency)
+              .then(() => {
+                import(registry.path)
+                  .then((module) => {
+                    this[moduleName] = module.default;
+                    if(this.#default.useGlobal)
+                      global[moduleName] = this[moduleName];
+                    this.#succeeded.push(moduleName);
+                    resolve(moduleName);
+                  }).catch((error) => {
+                    this.#failed.push(moduleName);
+                    reject(error);
+                  });
+              });
+          } else {
+            import(registry.path)
+              .then((module) => {
+                this[moduleName] = module.default;
+                if(this.#default.useGlobal)
+                  global[moduleName] = this[moduleName];
+                this.#succeeded.push(moduleName);
+                resolve(moduleName);
+              }).catch((error) => {
+                this.#failed.push(moduleName);
+                reject(error);
+              });
+          }
+        }
+      } else {
+        this.#omitted.push(moduleName);
+        resolve(moduleName);
+      }
+    });
+  }
+  /** @static @function register(searchPath,basePath)
     * @param {string} searchPath - path to examine; default if none given
     * @param {string} basePath - base path for module path; defaults to current directory
     * @return {object}
     **/
-  register(searchPath = this.default.searchPath, basePath = Namespace.path) {
+  static register(searchPath = this.#default.searchPath, basePath = this.basePath) {
     return new Promise((resolve, reject) => {
-      this.registerPath(Namespace.resolvePath(searchPath), basePath)
+      this.registerPath(this.resolvePath(searchPath))
         .then((namespace) => {
-          Log.info({ message: `Namespace completed registering modules`, source: this.name, payload: this.data });
-          resolve(this.data);
+          Log.info({ message: `Namespace completed registering modules`, source: this.name, payload: this.#data });
+          resolve(this);
         }).catch((error) => {
           Log.error({ message: error, source: this.name });
           reject(error);
         });
     });
+    return this;
   }
-  /** @function registerModule(registration,moduleName)
+  /** @static @function registerModule(registration,moduleName)
     * function register - returns the registration of the module
     * @param {object} registration - object containing module registration info
     * @param {string} moduleName - (optional) name of module; allows override/alias
     * @return {object}
     **/
-  registerModule(registration, moduleName = registration.name) {
+  static registerModule(registration, moduleName = registration.name) {
     if(typeof moduleName === 'undefined') {
       return undefined;
     } else {
-      return this.data[moduleName] = registration;
+      return this.#data[moduleName] = registration;
     }
   }
-  /** @function registerPath(searchPath,basePath,dependency)
+  /** @static @function registerPath(searchPath,dependency)
     * @param {string} searchPath - path to examine; default if none given
-    * @param {string} basePath - base path for module path; defaults to current directory
     * @return {object}
     **/
-  registerPath(searchPath = this.default.searchPath, basePath = Namespace.path, dependency = undefined) {
+  static registerPath(searchPath, dependency = undefined) {
     return new Promise((resolve, reject) => {
       let promises = [];
-      const relPath = path.relative('.', path.resolve(basePath, searchPath));
-      fs.readdir(relPath, { 'encoding': 'utf8', 'withFiletypes': true }, (error, files) => {
+      fs.readdir(searchPath, { 'encoding': 'utf8', 'withFiletypes': true }, (error, files) => {
         if(error) {
           reject(error);
         } else files.forEach(file => {
-          if(fs.statSync(path.join(relPath, file)).isDirectory()) {
-            promises.push(this.registerPath(path.join(searchPath, file), basePath, file));
-          } else if(Namespace.default.includeExtensions.includes(path.extname(file))) {
-            this.registerModule({name: path.basename(file, path.extname(file)), path: path.join(relPath, file), dependency: dependency});
+          if(fs.statSync(path.join(searchPath, file)).isDirectory()) {
+            promises.push(this.registerPath(path.join(searchPath, file), file));
+          } else if(this.#default.includeExtensions.includes(path.extname(file))) {
+            this.registerModule({name: path.basename(file, path.extname(file)), path: path.join(searchPath, file), dependency: dependency});
           }
         });
         Promise.allSettled(promises)
           .then(() => {
-            resolve(this.data);
+            resolve(this.#data);
           });
       });
     });
   }
+
+  /** @static @function resolvePath(data)
+    * Returns a resolved path
+    * @param {string} data
+    * @return {string}
+    **/
+  static resolvePath(data) {
+    return data.startsWith('#/') ? path.resolve(this.basePath, data.substr(2)) : path.resolve(this.path, data);
+  }
 }
 
-let ns = new Namespace();
+await Namespace.register();
 
-ns.register().then(() => {
-  console.log(ns.data);
-});
+export default Namespace;
