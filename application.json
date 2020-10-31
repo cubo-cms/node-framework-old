@@ -13,6 +13,6 @@
     "colorize": true,
     "useLocale": true,
     "suppressType": [],
-    "suppressSource": ["Router"]
+    "suppressSource": ["Router","Session"]
   }
 }
