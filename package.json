@@ -1,22 +1,35 @@
 {
-  "name": "framework",
+  "name": "@cubo-cms/node-framework",
   "type": "module",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "version": "0.3.20",
+  "description": "Cubo CMS Framework for Node.js",
+  "main": "index.mjs",
   "directories": {
     "lib": "lib",
     "test": "test"
   },
+  "exports": {
+    "import": "./Namespace.mjs",
+    "require": "./index.cjs"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cubo-cms/node-framework.git"
   },
+  "dependencies": {
+    "mongodb": "^3.6.2"
+  },
+  "engines": {
+    "node": ">=14.8"
+  },
   "author": "Papiando <info@papiando.com> (https://papiando.com/me)",
-  "license": "MIT",
+  "license": "MIT (https://cubo-cms.com/LICENSE.md)",
   "bugs": {
     "url": "https://github.com/cubo-cms/node-framework/issues"
   },
