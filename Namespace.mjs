@@ -48,13 +48,13 @@ class Namespace {
     return path.dirname(fileURLToPath(import.meta.url));
   }
 
-  /** @static @function isLoaded(moduleName)
-    * Returns true if module is loaded
+  /** @static @function exists(moduleName)
+    * Returns true if module exists
     * @param {string} moduleName - name of module
     * @return {boolean}
     **/
-  static isLoaded(moduleName) {
-    return this.#data[moduleName] && this.#data[moduleName].done;
+  static exists(moduleName) {
+    return typeof this[moduleName] === 'function';
   }
   /** @static @function isRegistered(moduleName)
     * Returns true if module is registered
@@ -73,7 +73,7 @@ class Namespace {
     return new Promise((resolve, reject) => {
       let promises = [];
       for(const moduleName of Object.keys(data)) {
-        if(!this.isLoaded(moduleName))
+        if(this.#data[moduleName] && !this.#data[moduleName].done)
           promises.push(this.loadModule(moduleName));
       }
       Promise.allSettled(promises)
@@ -145,7 +145,7 @@ class Namespace {
     return new Promise((resolve, reject) => {
       this.registerPath(this.resolvePath(searchPath))
         .then((namespace) => {
-          Log.success({ message: `Namespace completed registering modules`, source: this.name, payload: this.#data });
+          Log.info({ message: `Namespace completed registering modules`, source: this.name, payload: this.#data });
           resolve(this);
         }).catch((error) => {
           Log.error({ message: error, source: this.name });
