@@ -2,6 +2,7 @@
 test/
 .cert/
 .config/
+.data/
 
 # Logs
 logs

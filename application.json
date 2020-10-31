@@ -2,7 +2,7 @@
   "name": "cubo-cms",
   "title": "Cubo CMS",
   "description": "This is my first App",
-  "dataSource": "./example/datasource.json",
+  "dataSource": "#/.config/dataSource.json",
   "router": "#/.config/router.json",
   "server": "#/.config/server.json",
   "style": {
