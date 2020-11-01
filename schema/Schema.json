@@ -1,11 +1,13 @@
 [
   {
     "accessLevel": "public",
+    "description": "Describes who has access to documents",
     "documentStatus": "published",
+    "name": "Access levels",
     "id": "AccessLevel",
     "type": "dataType",
     "definition": {
-      "$id": "https://cubo-cms.com/Schema/:AccessLevel",
+      "$id": "Cubo:AccessLevel",
       "property": {
         "description": { "type": "string" },
         "id": { "type": "$ref" },
@@ -18,16 +20,20 @@
   },
   {
     "accessLevel": "public",
+    "description": "User accounts that have access to the site",
     "documentStatus": "published",
     "id": "User",
+    "name": "Users",
     "type": "dataType",
     "definition": {
-      "$id": "https://cubo-cms.com/Schema/:User",
+      "$id": "Cubo:User",
       "property": {
+        "accessLevel": { "$ref": "/Schema:AccessLevel" },
+        "description": { "type": "string" },
+        "documentStatus": { "$ref": "/Schema:DocumentStatus" },
         "id": { "type": "$ref" },
         "metadata": { "$id": "#/schema/metadata.json"},
         "name": { "type": "string" },
-        "owner": { "$ref": "/Schema:User" },
         "password": { "type": "string" }
       }
     }
@@ -38,7 +44,7 @@
     "id": "id",
     "type": "dataProperty",
     "definition": {
-      "$id": "https://cubo-cms.com/Schema/:id"
+      "$id": "Cubo:id"
     }
   }
 ]
