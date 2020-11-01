@@ -1,7 +1,7 @@
 {
   "name": "@cubo-cms/node-framework",
   "type": "module",
-  "version": "0.3.20",
+  "version": "0.3.21",
   "description": "Cubo CMS Framework for Node.js",
   "main": "index.mjs",
   "directories": {
@@ -13,6 +13,7 @@
     "require": "./index.cjs"
   },
   "scripts": {
+    "server": "node server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "publishConfig": {
