@@ -1,0 +1,44 @@
+[
+  {
+    "accessLevel": "public",
+    "documentStatus": "published",
+    "id": "AccessLevel",
+    "type": "dataType",
+    "definition": {
+      "$id": "https://cubo-cms.com/Schema/:AccessLevel",
+      "property": {
+        "description": { "type": "string" },
+        "id": { "type": "$ref" },
+        "metadata": { "$id": "#/schema/metadata.json"},
+        "name": { "type": "string" },
+        "owner": { "$ref": "/Schema:User" }
+      },
+      "required": [ "id", "name" ]
+    }
+  },
+  {
+    "accessLevel": "public",
+    "documentStatus": "published",
+    "id": "User",
+    "type": "dataType",
+    "definition": {
+      "$id": "https://cubo-cms.com/Schema/:User",
+      "property": {
+        "id": { "type": "$ref" },
+        "metadata": { "$id": "#/schema/metadata.json"},
+        "name": { "type": "string" },
+        "owner": { "$ref": "/Schema:User" },
+        "password": { "type": "string" }
+      }
+    }
+  },
+  {
+    "accessLevel": "public",
+    "documentStatus": "published",
+    "id": "id",
+    "type": "dataProperty",
+    "definition": {
+      "$id": "https://cubo-cms.com/Schema/:id"
+    }
+  }
+]
