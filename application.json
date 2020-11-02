@@ -13,6 +13,6 @@
     "colorize": true,
     "useLocale": true,
     "suppressType": [],
-    "suppressSource": ["Driver","Router","Session"]
+    "suppressSource": ["Driver","Model","Router","Session"]
   }
 }
