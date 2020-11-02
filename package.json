@@ -13,7 +13,7 @@
     "require": "./index.cjs"
   },
   "scripts": {
-    "server": "node server.mjs",
+    "start": "node server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "publishConfig": {
@@ -27,7 +27,7 @@
     "mongodb": "^3.6.2"
   },
   "engines": {
-    "node": ">=14.8"
+    "node": ">=14.15"
   },
   "author": "Papiando <info@papiando.com> (https://papiando.com/me)",
   "license": "MIT (https://cubo-cms.com/LICENSE.md)",
