@@ -1,7 +1,7 @@
 {
   "name": "@cubo-cms/node-framework",
   "type": "module",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "description": "Cubo CMS Framework for Node.js",
   "main": "index.mjs",
   "directories": {
