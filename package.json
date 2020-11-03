@@ -25,9 +25,7 @@
   },
   "dependencies": {
     "mongodb": "^3.6.2",
-    "parserblade": ">=1.2.0",
-    "xml.one": "1.0.3",
-    "yaml": "*"
+    "parserblade": ">=1.2.0"
   },
   "engines": {
     "node": ">=14.15"
