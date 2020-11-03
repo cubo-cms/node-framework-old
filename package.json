@@ -24,8 +24,10 @@
     "url": "git+https://github.com/cubo-cms/node-framework.git"
   },
   "dependencies": {
-    "fast-xml-parser": "^3.17.4",
-    "mongodb": "^3.6.2"
+    "mongodb": "^3.6.2",
+    "parserblade": ">=1.2.0",
+    "xml.one": "1.0.3",
+    "yaml": "*"
   },
   "engines": {
     "node": ">=14.15"
