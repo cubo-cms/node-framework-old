@@ -16,9 +16,10 @@ class Namespace {
   /** @static @property {object} default - holds default settings for class
     **/
   static default = {
+    autoRegister: true,     // automatically register the current namespace
     useGlobal: false,       // option to publish namespace objects globally
     includeExtensions: ['.mjs', '.js'],
-    searchPath: '#/lib'    // search path to locate modules
+    searchPath: '#/lib'     // search path to locate modules
   };
   /** @static @private @property {object} data - holds registry of modules
     **/
@@ -100,7 +101,6 @@ class Namespace {
         if(registry.done) {
           resolve(moduleName);
         } else {
-          registry.done = true;
           if(registry.dependency) {
             this.loadModule(registry.dependency)
               .then(() => {
@@ -110,6 +110,7 @@ class Namespace {
                     if(this.default.useGlobal)
                       global[moduleName] = this[moduleName];
                     this.#succeeded.push(moduleName);
+                    registry.done = true;
                     resolve(moduleName);
                   }).catch((error) => {
                     this.#failed.push(moduleName);
@@ -123,6 +124,7 @@ class Namespace {
                 if(this.default.useGlobal)
                   global[moduleName] = this[moduleName];
                 this.#succeeded.push(moduleName);
+                registry.done = true;
                 resolve(moduleName);
               }).catch((error) => {
                 this.#failed.push(moduleName);
@@ -146,7 +148,7 @@ class Namespace {
       this.registerPath(this.resolvePath(searchPath))
         .then((namespace) => {
           Log.info({ message: `Namespace completed registering modules`, source: this.name, payload: this.#data });
-          resolve(this);
+          resolve(this.#data);
         }).catch((error) => {
           Log.error({ message: error, source: this.name });
           reject(error);
@@ -202,6 +204,7 @@ class Namespace {
   }
 }
 
-await Namespace.register();
+if(Namespace.default.autoRegister)
+  await Namespace.register();
 
 export default Namespace;
