@@ -6,8 +6,10 @@
   "router": "#/.config/router.json",
   "server": "#/.config/server.json",
   "style": {
-    "document": "#/view/style/document.html",
-    "list": "#/view/style/list.html",
+    "default": {
+      "document": "#/view/default/document.html",
+      "list": "#/view/default/list.html"
+    },
     "AccessLevel": {
       "document": "#/view/AccessLevel/document.html",
       "list": "#/view/AccessLevel/list.html"
