@@ -11,7 +11,7 @@ await Cubo.load();
 
 const { Application } = Cubo;
 
-const app = new Application();
-app.success(() => {
-  app.start();
-});
+new Application()
+  .success((app) => {
+    app.start();
+  });
