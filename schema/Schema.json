@@ -11,9 +11,9 @@
       "property": {
         "description": { "type": "string" },
         "id": { "type": "$ref" },
-        "metadata": { "$id": "#/schema/metadata.json"},
+        "metadata": { "$ref": "#/schema/metadata.json"},
         "name": { "type": "string" },
-        "owner": { "$ref": "/Schema:User" }
+        "owner": { "$ref": ":User" }
       },
       "required": [ "id", "name" ]
     }
