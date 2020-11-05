@@ -24,6 +24,7 @@
     "url": "git+https://github.com/cubo-cms/node-framework.git"
   },
   "dependencies": {
+    "marked": "^1.2.3",
     "mongodb": "^3.6.2",
     "parserblade": ">=1.2.0"
   },
