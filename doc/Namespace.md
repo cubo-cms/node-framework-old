@@ -1,5 +1,3 @@
-# Cubo CMS
-
 ## Namespace class
 
 The `Namespace` class provides the web application you are developing with a general namespace through which all the framework classes are available. It is designed in a way that you can extend the namespace with additional classes, or use the class independently to provide your own classes through a different namespace.
