@@ -13,10 +13,9 @@ Note that the actual namespace does not need to be named `Namespace`, or `Cubo` 
 
 - [register (*searchPath*, *basePath*)](#static-register-searchpath-basepath)
 - [load (*registry*)](#static-load-registry)
+- [basePath](#static-basepath)
 
-### Register methods
-
-#### `static register (searchPath, basePath)`
+### `static register (searchPath, basePath)`
 
 Will locate all class modules, typically **\*.js** or **\*.mjs** scripts, under a file tree indicated by `searchPath`. This file tree is a relative path below a `basePath`, which by default is your application root. The function returns a promise to give you an object of registered classes with their dependencies.
 
@@ -28,12 +27,12 @@ import Cubo from '@cubo-cms/node-framework'
 Cubo.register('./mylib')
   .then((registry) => { console.log(registry) })
   .catch((error) => { console.error(error) })
-  .finally(() => { *** do something *** })
+  .finally(() => { `do something` })
 
 // Expected output: object with modules
 ```
 
-#### `static load (registry)`
+### `static load (registry)`
 
 Will load all class modules into the namespace. The registry parameter is optional, but allows for loading class modules from a different registry.
 
@@ -46,12 +45,12 @@ Cubo.register('./mylib')
   .then((registry) => { return Cubo.load() })
   .then((namespace) => { console.log(namespace) })
   .catch((error) => { console.error(error) })
-  .finally(() => { *** do something *** })
+  .finally(() => { `do something` })
 
 // Expected output: namespace object showing loaded classes
 ```
 
-#### `static basePath`
+### `static basePath`
 
 Worth mentioning is this getter function that retrieves the path to the root of the application.
 
